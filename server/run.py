@@ -3,7 +3,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from instructions import language_teacher_instructions
-from functions import translate, speak, set_teaching_language
+from functions import translate, speak, set_teaching_language, check_learning_plan
 from dall_e_3 import get_dalle_image
 from assistant import create_assistant, create_thread, get_completion
 
@@ -92,6 +92,24 @@ assistant_id = create_assistant(
                     "required": ["text"]
                 }
             }
+        },
+        {
+            "type": "function",  # 用于检查学习计划的函数
+            "function": {
+                "name": "check_learning_plan",
+                "description": "检查学习计划.",
+                "parameters": {
+                    "type": "object",
+                    "properties": {
+                        "language": {
+                            "type": "string",
+                            "description": "The language to be taught."
+                        },
+                    },
+                    "required": ["language"]
+                }
+            }
+            
         }
     ],
     files=["../data/knowledge.txt"],
@@ -99,7 +117,7 @@ assistant_id = create_assistant(
 )
 
 # 创建函数调用列表
-funcs = [set_teaching_language, speak]
+funcs = [set_teaching_language, speak, check_learning_plan, translate, get_dalle_image]
 
 
 @app.get("/create_thread")

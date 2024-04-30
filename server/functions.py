@@ -96,6 +96,19 @@ def set_teaching_language(language, context= "Conversational"):
         file.write(plan)
         
     return plan
+
+def check_learning_plan(language):
+    """
+    Checks the learning plan for a specific language.
+
+    Args:
+        language (str): The language to check the learning plan for.
+
+    Returns:
+        str: The learning plan for the specified language.
+    """
+    with open(f"../data/learning_plan_{language}.txt", "r") as file:
+        return file.read()
     
 
         
